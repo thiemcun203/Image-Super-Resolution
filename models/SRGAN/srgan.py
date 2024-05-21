@@ -2,7 +2,7 @@ import os
 import torch
 from torch import nn
 from PIL import Image
-from torchvision.transforms import ToTensor, functional as TF
+from torchvision.transforms import ToTensor
 
 class ResidualBlock(nn.Module):
     def __init__(self, in_features):
@@ -80,7 +80,7 @@ if __name__ == '__main__':
 
     model = GeneratorResnet()
     device = torch.device('cpu') if not torch.cuda.is_available() else torch.device('cuda')
-    model = model.load_state_dict(torch.load(current_dir + '/srgan_checkpoint.pth', map_location=device)).to(device)
+    model = torch.load(current_dir + '/srgan_checkpoint.pth', map_location=device).to(device)
     model.eval()
     with torch.no_grad():
         input_image = Image.open('images/demo.png')
