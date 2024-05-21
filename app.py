@@ -152,8 +152,7 @@ if 'image' in locals():
             with st.spinner('Wait for it... the model is processing the image'):
                 srgan_model = GeneratorResnet()
                 device = torch.device('cpu') if not torch.cuda.is_available() else torch.device('cuda')
-                checkpoint = torch.load('models/SRGAN/srgan_checkpoint.pth', map_location=device)
-                srgan_model.load_state_dict(checkpoint['generator'])
+                srgan_model = torch.load('models/SRGAN/srgan_checkpoint.pth', map_location=device)
                 enhanced_image = srgan_model.inference(image)
                 st.session_state['srgan_enhanced_image'] = enhanced_image
             st.session_state['srgan_clicked'] = True 
