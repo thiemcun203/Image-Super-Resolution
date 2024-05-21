@@ -80,10 +80,11 @@ if __name__ == '__main__':
 
     model = GeneratorResnet()
     device = torch.device('cpu') if not torch.cuda.is_available() else torch.device('cuda')
-    model = model.load_state_dict(torch.load(current_dir + '/srgan_checkpoint.pth', map_location=device))
+    model = model.load_state_dict(torch.load(current_dir + '/srgan_checkpoint.pth', map_location=device)).to(device)
     model.eval()
     with torch.no_grad():
         input_image = Image.open('images/demo.png')
         input_image = ToTensor()(input_image).unsqueeze(0)
+        input_image = input_image.to(device)
         output_image = model.test(input_image)
         print(output_image.max())
