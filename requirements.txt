@@ -1,0 +1,10 @@
+torch
+einops
+basicsr
+torchvision
+torchmetrics
+streamlit
+gdown
+pillow
+matplotlib
+natsort
