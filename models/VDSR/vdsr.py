@@ -49,11 +49,16 @@ class VDSR(nn.Module):
         x is a PIL image
         """
         self.eval()
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.to(device)
+        
         with torch.no_grad():
-            x = ToTensor()(x).unsqueeze(0)
+            x = ToTensor()(x).unsqueeze(0).to(device)
             x = F.interpolate(x, scale_factor=4, mode='bicubic', align_corners=False).clamp(0, 1)
-            x = self.forward(x.to(self.device)).clamp(0, 1)
+            x = self.forward(x).clamp(0, 1)
+            x = x.cpu()  # Move tensor back to CPU for conversion to PIL image
             x = Image.fromarray((x.squeeze(0).permute(1, 2, 0).detach().numpy() * 255).astype('uint8'))
+        
         return x
 
 if __name__ == '__main__':
