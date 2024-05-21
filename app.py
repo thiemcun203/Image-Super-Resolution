@@ -172,9 +172,7 @@ if 'image' in locals():
         with st.spinner('Processing using VDSR...'):
             # Load the VDSR model
             device = torch.device('cpu') if not torch.cuda.is_available() else torch.device('cuda')
-            vdsr_model = VDSR()
-            checkpoint = torch.load('models/VDSR/vdsr_checkpoint.pth', map_location=device)
-            vdsr_model.load_state_dict(checkpoint['model'])
+            vdsr_model = torch.load('models/VDSR/vdsr_checkpoint.pth', map_location=device)
             enhanced_image = vdsr_model.inference(image)
             st.session_state['vdsr_enhanced_image'] = enhanced_image
             st.session_state['vdsr_clicked'] = True
