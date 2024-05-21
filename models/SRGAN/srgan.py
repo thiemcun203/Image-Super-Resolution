@@ -55,17 +55,32 @@ class GeneratorResnet(nn.Module):
         out = self.conv3(out)
         return out.clamp(0, 1)
     
+    # def inference(self, x):
+    #     """
+    #     x is a PIL image
+    #     """
+    #     self.eval()
+    #     with torch.no_grad():
+    #         x = ToTensor()(x).unsqueeze(0)
+    #         x = self.forward(x.to(self.device ))
+    #         x = Image.fromarray((x.squeeze(0).permute(1, 2, 0).detach().numpy() * 255).astype('uint8'))
+    #     return x
     def inference(self, x):
         """
         x is a PIL image
         """
         self.eval()
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.to(device)
+        
         with torch.no_grad():
-            x = ToTensor()(x).unsqueeze(0)
-            x = self.forward(x.to(self.device ))
+            x = ToTensor()(x).unsqueeze(0).to(device)
+            x = self.forward(x).clamp(0, 1)
+            x = x.cpu()  # Move tensor back to CPU for conversion to PIL image
             x = Image.fromarray((x.squeeze(0).permute(1, 2, 0).detach().numpy() * 255).astype('uint8'))
+        
         return x
-    
+
     def test(self, x):
         """
         x is a tensor
